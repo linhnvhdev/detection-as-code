@@ -1,0 +1,1 @@
+Image="*powershell.exe" CommandLine="*-e*" NOT CommandLine="*-exec*"

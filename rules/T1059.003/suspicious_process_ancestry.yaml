@@ -1,0 +1,31 @@
+title: Unusual or suspicious process ancestry
+id: a250b79a-fd55-46e9-b7bf-4af6dbf28c6e
+status: test
+description: detect a diverse array of malicious activity related to web server compromises
+references:
+    - https://redcanary.com/threat-detection-report/techniques/windows-command-shell/
+author: Linhnvhdev
+date: 2023/08/29
+tags:
+    - attack.t1059.003
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith: 'cmd.exe'
+        ParentImage|endswith: 'w3wp.exe'
+        CommandLine|contains:
+            - 'http://' # captures both http and https
+            - 'https://'
+            - 'echo'
+    other:
+        Image|endswith: 'powershell.exe'
+        ParentImage|endswith: 'cmd.exe'
+    condition: selection or other
+fields:
+    - CommandLine
+    - ParentCommandLine
+falsepositives:
+    - medium
+level: medium

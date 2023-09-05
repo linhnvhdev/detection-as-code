@@ -1,0 +1,1 @@
+Image="*cmd.exe" ParentImage="*explorer.exe" CommandLine="*start*" CommandLine="*exit*"

@@ -1,0 +1,1 @@
+Image="*powershell.exe" CommandLine IN ("*-nop*", "*noni*", "*invoke-expression*", "*iex*", "*.downloadstring*", "*downloadfile*")

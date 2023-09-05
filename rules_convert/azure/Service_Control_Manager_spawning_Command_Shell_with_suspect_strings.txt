@@ -1,0 +1,2 @@
+union *
+| where Image endswith "cmd.exe" and ParentImage endswith "explorer.exe" and (CommandLine contains "start" and CommandLine contains "exit")

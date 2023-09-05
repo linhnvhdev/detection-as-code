@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "detection-as-code"
+version = "0.1.0"
+description = ""
+authors = ["Linhnvhdev <linhnvhdev@gmail.com>"]
+readme = "README.md"
+packages = [{include = "detection_as_code"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pysigma = "^0.10.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

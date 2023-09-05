@@ -1,0 +1,1 @@
+Image="*cmd.exe" CommandLine IN ("*bypass*", "*-exec*")

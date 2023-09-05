@@ -1,0 +1,1 @@
+EventCode="4688" __azure_logsource="SecurityEvent" EventCode="4688" __azure_logsource="SecurityEvent" (Image="*cmd.exe" ParentImage="*w3wp.exe" CommandLine IN ("*http://*", "*https://*", "*echo*")) OR (Image="*powershell.exe" ParentImage="*cmd.exe") | table CommandLine,ParentCommandLine

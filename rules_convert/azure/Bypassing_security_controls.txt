@@ -1,0 +1,2 @@
+union *
+| where Image endswith "cmd.exe" and (CommandLine in ("*bypass*", "*-exec*"))
