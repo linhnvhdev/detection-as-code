@@ -1,2 +1,0 @@
-union *
-| where Image endswith "powershell.exe" and (CommandLine in ("*-nop*", "*noni*", "*invoke-expression*", "*iex*", "*.downloadstring*", "*downloadfile*"))

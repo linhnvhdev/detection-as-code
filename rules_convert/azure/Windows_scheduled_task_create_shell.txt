@@ -1,2 +1,0 @@
-union *
-| where Image endswith "schtasks.exe" and (CommandLine in ("*create*", "*cmd.exe /c*", "*cmd /c*"))

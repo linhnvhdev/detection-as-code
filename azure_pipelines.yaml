@@ -1,0 +1,11 @@
+name: Custom azure field naming
+priority: 100
+transformations:
+- id: field_mapping
+  type: field_name_mapping
+  mapping:
+    Image: NewProcessName
+    ParentImage: ParentProcessName
+  rule_conditions:
+  - type: logsource
+    product: windows

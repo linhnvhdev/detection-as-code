@@ -1,2 +1,0 @@
-SysmonEvent
-| where ((source =~ "WinEventLog:Microsoft-Windows-Sysmon/Operational" and EventCode =~ 16))

@@ -1,2 +1,0 @@
-union *
-| where (Image endswith "powershell.exe" and CommandLine contains "-e") and (not CommandLine contains "-exec")

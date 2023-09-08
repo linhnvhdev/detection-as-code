@@ -1,2 +1,0 @@
-SecurityEvent
-| where EventID =~ "4688" and ((EventID =~ "4688" and (((Image endswith "cmd.exe" and ParentImage endswith "w3wp.exe" and (CommandLine in ("*http://*", "*https://*", "*echo*"))) or (Image endswith "powershell.exe" and ParentImage endswith "cmd.exe")))))
