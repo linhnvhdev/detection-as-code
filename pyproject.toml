@@ -8,7 +8,8 @@ packages = [{include = "detection_as_code"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-pysigma = "^0.10.5"
+pysigma = "0.9.11"
+pysigma-backend-splunk = "1.0.2"
 
 
 [build-system]
