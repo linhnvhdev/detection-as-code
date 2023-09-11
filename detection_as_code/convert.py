@@ -12,6 +12,7 @@ import pathlib
 from pprint import pprint
 import os
 import json
+import copy
 
 def convert_to_query(sigma_folder):
     with open("azure_pipelines.yaml","r") as f:
@@ -43,34 +44,29 @@ def convert_to_query(sigma_folder):
     splunk_backend = SplunkBackend(splunk_pipeline)
     azure_backend = AzureBackend(real_azure_pipeline)
 
-    splunk_rules = splunk_backend.convert(rules)
-    azure_rules = azure_backend.convert(rules)
-
-    print("spl: \n",splunk_rules)
-    print("kql: \n",azure_rules)
-
     splunk_rules = []
     azure_rules = []
 
     for rule in rules:
-        sigma_collection = SigmaCollection(rules=[rule])
+        sigma_collection_splunk = SigmaCollection(rules=[rule])
+        sigma_collection_azure = copy.deepcopy(sigma_collection_splunk)
         
         splunk_rule = ConvertedRule(title = rule.title,
                                     type="splunk",
                                     status=rule.status.name,
-                                    rule=splunk_backend.convert(sigma_collection))
+                                    rule=splunk_backend.convert(sigma_collection_splunk))
         azure_rule = ConvertedRule(title = rule.title,
                                    type="azure",
                                    status=rule.status.name,
-                                   rule=azure_backend.convert(sigma_collection))
+                                   rule=azure_backend.convert(sigma_collection_azure))
         splunk_rules.append(splunk_rule)
         azure_rules.append(azure_rule)
         print(vars(splunk_rule))
         print(vars(azure_rule))
         # with open("rules_convert/azure/"+rule.title.replace(" ","_")+".txt","w") as f:
-        #     f.write("\n".join(azure_backend.convert(sigma_collection)))
+        #     f.write(azure_rule.rule[0])
         # with open("rules_convert/splunk/"+rule.title.replace(" ","_")+".txt","w") as f:
-        #     f.write("\n".join(splunk_backend.convert(sigma_collection)))
+        #     f.write(splunk_rule.rule[0])
     return splunk_rules, azure_rules
 
 if __name__ == "__main__":
