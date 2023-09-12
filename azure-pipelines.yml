@@ -111,7 +111,7 @@ stages:
       displayName: 'Download evtx-sigma-checker'
     - script: |
         wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win10-client.tgz
-        tar xzf win7-x86.tgz
+        tar xzf win10-client.tgz
       displayName: Download and extract Windows 10 32-bit baseline
     - script: |
         chmod +x evtx-sigma-checker
