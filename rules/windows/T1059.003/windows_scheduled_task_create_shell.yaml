@@ -1,7 +1,8 @@
-title: Service Control Manager spawning Command Shell with suspect strings
+title: Windows scheduled task create shell
+
 id: a250b79a-fd55-46e9-b7bf-4af6dbf28c6e
 status: test
-description: Service Control Manager spawning Command Shell with suspect strings
+description: Adversaries frequently establish persistence by using scheduled tasks to launch the Windows Command Shell
 references:
     - https://redcanary.com/threat-detection-report/techniques/windows-command-shell/
 author: Linhnvhdev
@@ -12,11 +13,11 @@ logsource:
     product: windows
 detection:
     selection:
-        Image|endswith: 'cmd.exe'
-        ParentImage|endswith: 'explorer.exe'
-        CommandLine|contains|all:
-            - 'start'
-            - 'exit'
+        Image|endswith: 'schtasks.exe'
+        CommandLine|contains:
+            - 'create'
+            - 'cmd.exe /c'
+            - 'cmd /c'
     condition: selection
 falsepositives:
     - medium

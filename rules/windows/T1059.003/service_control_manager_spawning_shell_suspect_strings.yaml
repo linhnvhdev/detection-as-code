@@ -1,7 +1,8 @@
-title: Bypassing security controls
+title: Service Control Manager spawning Command Shell with suspect strings
+
 id: a250b79a-fd55-46e9-b7bf-4af6dbf28c6e
 status: test
-description: detect Adversaries bypass controls
+description: Service Control Manager spawning Command Shell with suspect strings
 references:
     - https://redcanary.com/threat-detection-report/techniques/windows-command-shell/
 author: Linhnvhdev
@@ -13,9 +14,10 @@ logsource:
 detection:
     selection:
         Image|endswith: 'cmd.exe'
+        ParentImage|endswith: 'services.exe'
         CommandLine|contains:
-            - 'bypass'
-            - '-exec'
+            - '/c'
+            - 'echo'
     condition: selection
 falsepositives:
     - medium
