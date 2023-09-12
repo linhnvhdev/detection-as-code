@@ -9,20 +9,190 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-jobs:
-- job: validate_sigma_rules
-  steps:
-  - checkout: self
+variables:
+  EVTX_BASELINE_VERSION: 'v0.7'
 
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.10'
-      addToPath: true
+stages:
+- stage: validate_sigma_rules
+  jobs:
+  - job: validate_sigma_rules
+    steps:
+    - checkout: self
 
-  - script: |
-      pip install check-jsonschema
-    displayName: 'Install dependencies'
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10'
+        addToPath: true
 
-  - script: |
-      ./tests/validate-sigma-schema/validate.sh
-    displayName: 'Validate Sigma rules'
+    - script: |
+        pip install check-jsonschema
+      displayName: 'Install dependencies'
+
+    - script: |
+        ./tests/validate-sigma-schema/validate.sh
+      displayName: 'Validate Sigma rules'
+- stage: test_sigma
+  jobs:
+  - job: yamllint
+    displayName: 'YAML Lint'
+    steps:
+    - checkout: self
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.11'
+        addToPath: true
+    - script: |
+        pip install PyYAML colorama
+        python tests/test_logsource.py
+      displayName: 'Test Sigma logsource'
+
+  - job: test_sigma_logsource
+    displayName: 'Test Sigma logsource'
+    dependsOn: yamllint
+    steps:
+    - checkout: self
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.11'
+        addToPath: true
+    - script: |
+        pip install PyYAML colorama
+        python tests/test_logsource.py
+      displayName: 'Test Sigma logsource'
+      
+  - job: test_sigma_syntax
+    displayName: 'Test Sigma Rules'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.11'
+        addToPath: true
+    - script: |
+        # pip install sigma-cli~=0.7.1
+        pip install sigma-cli
+      displayName: 'Install dependencies'
+    - script: sigma check rules*
+      displayName: 'Test Sigma Rule Syntax'
+    - script: |
+        pip install PyYAML attackcti colorama
+        python tests/test_rules.py
+      displayName: 'Test Sigma Rules'
+    
+  - job: check_baseline_win7
+    pool: 
+      vmImage: ubuntu-latest
+    displayName: 'Check Windows 7 Baseline'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
+      displayName: 'Download evtx-sigma-checker'
+    - script: |
+        wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win7-x86.tgz
+        tar xzf win7-x86.tgz
+      displayName: Download and extract Windows 7 32-bit baseline
+    - script: |
+        chmod +x evtx-sigma-checker
+        ./evtx-sigma-checker --log-source tests/thor.yml --evtx-path win7_x86/ --rule-path rules/windows/ > findings.json
+      displayName: Check for Sigma matches in baseline
+    - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
+      displayName: Show findings excluding known FPs
+  
+  - job: check_baseline_win10
+    pool: 
+      vmImage: ubuntu-latest
+    displayName: 'Check Windows 10 Baseline'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
+      displayName: 'Download evtx-sigma-checker'
+    - script: |
+        wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win10-client.tgz
+        tar xzf win7-x86.tgz
+      displayName: Download and extract Windows 10 32-bit baseline
+    - script: |
+        chmod +x evtx-sigma-checker
+        ./evtx-sigma-checker --log-source tests/thor.yml --evtx-path Logs_Client/ --rule-path rules/windows/ > findings.json
+      displayName: Check for Sigma matches in baseline
+    - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
+      displayName: Show findings excluding known FPs
+  - job: check_baseline_win11
+    pool: 
+      vmImage: ubuntu-latest
+    displayName: 'Check Windows 11 Baseline'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
+      displayName: 'Download evtx-sigma-checker'
+    - script: |
+        wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win11-client.tgz
+        tar xzf win11-client.tgz
+      displayName: Download and extract Windows 11 baseline
+    - script: |
+        chmod +x evtx-sigma-checker
+        ./evtx-sigma-checker --log-source tests/thor.yml --evtx-path Logs_Win11/ --rule-path rules/windows/ > findings.json
+      displayName: Check for Sigma matches in baseline
+    - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
+      displayName: Show findings excluding known FPs
+  - job: check_baseline_win2022
+    pool: 
+      vmImage: ubuntu-latest
+    displayName: 'Check Windows 2022 Baseline'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
+      displayName: 'Download evtx-sigma-checker'
+    - script: |
+        wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win2022-evtx.tgz
+        tar xzf win2022-evtx.tgz
+      displayName: Download and extract Windows 2022 baseline
+    - script: |
+        chmod +x evtx-sigma-checker
+        ./evtx-sigma-checker --log-source tests/thor.yml --evtx-path win2022-evtx/ --rule-path rules/windows/ > findings.json
+      displayName: Check for Sigma matches in baseline
+    - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
+      displayName: Show findings excluding known FPs
+  - job: check_baseline_win2022_domain_controller
+    pool: 
+      vmImage: ubuntu-latest
+    displayName: 'Check Windows 2022 Domain Controller Baseline'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
+      displayName: 'Download evtx-sigma-checker'
+    - script: |
+        wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win2022-ad.tgz
+        tar xzf win2022-ad.tgz
+      displayName: Download and extract Windows 2022 baseline
+    - script: |
+        chmod +x evtx-sigma-checker
+        ./evtx-sigma-checker --log-source tests/thor.yml --evtx-path Win2022-AD/ --rule-path rules/windows/ > findings.json
+      displayName: Check for Sigma matches in baseline
+    - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
+      displayName: Show findings excluding known FPs
+  - job: check_baseline_win2022_0_20348_azure
+    pool: 
+      vmImage: ubuntu-latest
+    displayName: 'Check Windows 2022 Azure Baseline'
+    dependsOn: test_sigma_logsource
+    steps:
+    - checkout: self
+    - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
+      displayName: 'Download evtx-sigma-checker'
+    - script: |
+        wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/win2022-0-20348-azure.tgz
+        tar xzf win2022-0-20348-azure.tgz
+      displayName: Download and extract Windows 2022 baseline
+    - script: |
+        chmod +x evtx-sigma-checker
+        ./evtx-sigma-checker --log-source tests/thor.yml --evtx-path win2022-0-20348-azure/ --rule-path rules/windows/ > findings.json
+      displayName: Check for Sigma matches in baseline
+    - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
+      displayName: Show findings excluding known FPs
+  
