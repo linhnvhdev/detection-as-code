@@ -46,7 +46,7 @@ stages:
         python tests/test_logsource.py
       displayName: 'Test Sigma logsource'
 
-  - job: test-sigma-logsource
+  - job: test_sigma_logsource
     displayName: 'Test Sigma logsource'
     dependsOn: yamllint
     steps:
@@ -60,9 +60,9 @@ stages:
         python tests/test_logsource.py
       displayName: 'Test Sigma logsource'
       
-  - job: test-sigma-syntax
+  - job: test_sigma_syntax
     displayName: 'Test Sigma Rules'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -80,11 +80,11 @@ stages:
         python tests/test_rules.py
       displayName: 'Test Sigma Rules'
     
-  - job: check-baseline-win7
+  - job: check_baseline_win7
     pool: 
       vmImage: ubuntu-latest
     displayName: 'Check Windows 7 Baseline'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
@@ -100,11 +100,11 @@ stages:
     - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
       displayName: Show findings excluding known FPs
   
-  - job: check-baseline-win10
+  - job: check_baseline_win10
     pool: 
       vmImage: ubuntu-latest
     displayName: 'Check Windows 10 Baseline'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
@@ -119,11 +119,11 @@ stages:
       displayName: Check for Sigma matches in baseline
     - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
       displayName: Show findings excluding known FPs
-  - job: check-baseline-win11
+  - job: check_baseline_win11
     pool: 
       vmImage: ubuntu-latest
     displayName: 'Check Windows 11 Baseline'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
@@ -138,11 +138,11 @@ stages:
       displayName: Check for Sigma matches in baseline
     - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
       displayName: Show findings excluding known FPs
-  - job: check-baseline-win2022
+  - job: check_baseline_win2022
     pool: 
       vmImage: ubuntu-latest
     displayName: 'Check Windows 2022 Baseline'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
@@ -157,11 +157,11 @@ stages:
       displayName: Check for Sigma matches in baseline
     - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
       displayName: Show findings excluding known FPs
-  - job: check-baseline-win2022-domain-controller
+  - job: check_baseline_win2022_domain_controller
     pool: 
       vmImage: ubuntu-latest
     displayName: 'Check Windows 2022 Domain Controller Baseline'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
@@ -176,11 +176,11 @@ stages:
       displayName: Check for Sigma matches in baseline
     - script: workflows/matchgrep.sh findings.json workflows/known-FPs.csv
       displayName: Show findings excluding known FPs
-  - job: check-baseline-win2022-0-20348-azure
+  - job: check_baseline_win2022_0_20348_azure
     pool: 
       vmImage: ubuntu-latest
     displayName: 'Check Windows 2022 Azure Baseline'
-    dependsOn: test-sigma-logsource
+    dependsOn: test_sigma_logsource
     steps:
     - checkout: self
     - script: wget --no-verbose https://github.com/NextronSystems/evtx-baseline/releases/download/$(EVTX_BASELINE_VERSION)/evtx-sigma-checker
