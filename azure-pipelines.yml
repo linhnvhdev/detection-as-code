@@ -12,7 +12,7 @@ pool:
 
 
 jobs:
-- job: validate-sigma-rules
+- job: validate_sigma_rules
   steps:
   - checkout: self
 
