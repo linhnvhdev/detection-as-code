@@ -19,6 +19,7 @@ tags:
 logsource:
     product: windows
     category: ps_module
+    service: powershell
     definition: 0ad03ef1-f21b-4a79-8ce8-e6900c54b65b
 detection:
     selection_4103:
