@@ -1,6 +1,6 @@
 title: Unusual or suspicious process ancestry
 
-id: a250b79a-fd55-46e9-b7bf-4af6dbf28c6e
+id: 51ad7fa9-17b9-4245-a939-adae9e710380
 status: test
 description: detect a diverse array of malicious activity related to web server compromises
 references:

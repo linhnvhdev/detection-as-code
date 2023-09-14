@@ -13,6 +13,7 @@ from pprint import pprint
 import os
 import json
 import copy
+import sys
 
 def convert_to_query(sigma_folder):
     with open("azure_pipelines.yaml","r") as f:
@@ -71,6 +72,9 @@ def convert_to_query(sigma_folder):
 
 if __name__ == "__main__":
     sigma_rule_folder = "rules"
+    if len(sys.argv) == 2:
+        sigma_rule_folder = sys.argv[1]
+    print(sigma_rule_folder)
     splunk_rules, azure_rules = convert_to_query(sigma_folder=sigma_rule_folder)
     upload_to_splunk.upload(splunk_rules)
     upload_to_sentinel.upload(azure_rules)
