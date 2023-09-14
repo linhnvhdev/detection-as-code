@@ -44,10 +44,7 @@ def convert_to_query(sigma_folder):
 
     splunk_backend = SplunkBackend(splunk_pipeline)
     azure_backend = AzureBackend(real_azure_pipeline)
-    print(azure_backend.eq_token)
     azure_backend.eq_token = "=="
-    
-    print(vars(azure_backend))
 
     splunk_rules = []
     azure_rules = []
@@ -72,17 +69,16 @@ def convert_to_query(sigma_folder):
         azure_rules.append(azure_rule)
         # print(vars(splunk_rule))
         # print(vars(azure_rule))
-        with open("rules_convert/azure/"+rule.title.replace(" ","_")+".txt","w") as f:
-            f.write(azure_rule.rule[0])
-        with open("rules_convert/splunk/"+rule.title.replace(" ","_")+".txt","w") as f:
-            f.write(splunk_rule.rule[0])
+        # with open("rules_convert/azure/"+rule.title.replace(" ","_")+".txt","w") as f:
+        #     f.write(azure_rule.rule[0])
+        # with open("rules_convert/splunk/"+rule.title.replace(" ","_")+".txt","w") as f:
+        #     f.write(splunk_rule.rule[0])
     return splunk_rules, azure_rules
 
 if __name__ == "__main__":
     sigma_rule_folder = "rules"
     if len(sys.argv) == 2:
         sigma_rule_folder = sys.argv[1]
-    print(sigma_rule_folder)
     splunk_rules, azure_rules = convert_to_query(sigma_folder=sigma_rule_folder)
     upload_to_splunk.upload(splunk_rules)
     upload_to_sentinel.upload(azure_rules)

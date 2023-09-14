@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/LinhNVH3/detection-as-code/_apis/build/status%2Flinhnvhdev.detection-as-code?branchName=main)](https://dev.azure.com/LinhNVH3/detection-as-code/_build/latest?definitionId=1&branchName=main)
+
 ## Installation
 
 ```bash
