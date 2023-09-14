@@ -1,6 +1,6 @@
 title: Suspicious PowerShell Cmdlets
 
-id: dec520d9-638f-4646-89dc-f60f0900390b
+id: 95651816-0f9e-4234-880a-1e3b27ea8320
 status: experimental
 description: detection analytics look for cmdlets, methods, and switches that may indicate malicious activity
 author: linhnvhdev
