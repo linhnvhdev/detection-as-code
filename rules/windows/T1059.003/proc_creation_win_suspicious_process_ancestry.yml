@@ -1,4 +1,4 @@
-title: Unusual or suspicious process ancestry
+title: Unusual Or Suspicious Process Ancestry
 
 id: 51ad7fa9-17b9-4245-a939-adae9e710380
 status: test
@@ -28,5 +28,5 @@ fields:
     - CommandLine
     - ParentCommandLine
 falsepositives:
-    - medium
+    - Unknown
 level: medium

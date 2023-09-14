@@ -5,7 +5,6 @@ import json
 subscription_id='73311b42-844b-41a5-81b4-f864cbdac511'
 resource_group_name='sentinel-lab'
 workspace_name='sentinel-workspace'
-test_query="Event | where EventLog in~ ('Microsoft-Windows-PowerShell/Operational', 'Windows PowerShell')  | where ((EventData contains @' -enc ' or EventData contains @' -EncodedCommand ' or EventData contains @' -ec ') and (EventData contains @' -w hidden ' or EventData contains @' -window hidden ' or EventData contains @' -windowstyle hidden ' or EventData contains @' -w 1 ') and (EventData contains @' -noni ' or EventData contains @' -noninteractive '))"
 
 def upload(rules):
     bearer_token = login_to_azure()
