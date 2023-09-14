@@ -1,1 +1,3 @@
 RuleId;RuleName;MatchString
+8ac03a65-6c84-4116-acad-dc1558ff7a77;Sysmon Configuration Change;sysmon-intense\.xml
+8ac03a65-6c84-4116-acad-dc1558ff7a77;Sysmon Configuration Change;Computer: (evtx-PC|Agamemnon)
