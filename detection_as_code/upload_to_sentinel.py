@@ -1,17 +1,23 @@
 import requests
 import subprocess
 import json
+import os 
+from dotenv import load_dotenv
 
 subscription_id='73311b42-844b-41a5-81b4-f864cbdac511'
 resource_group_name='sentinel-lab'
 workspace_name='sentinel-workspace'
 
 def upload(rules):
+    print("Upload to Sentinel")
     bearer_token = login_to_azure()
     upload_rules(rules, bearer_token)
 
 def login_to_azure():
-    login_process = subprocess.call("az login", shell=True)
+    load_dotenv()
+    login_command = f"az login --service-principal -u {os.getenv('appId')} -p {os.getenv('password')} --tenant {os.getenv('tenant')}"
+    login_process = subprocess.call(login_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+    #login_process = subprocess.call(login_command, shell=True)
     print("Login to azure successfully")
     get_token_process = subprocess.check_output("az account get-access-token --output json", shell=True)
     token_data = json.loads(get_token_process)
@@ -62,7 +68,6 @@ def upload_rules(rules, bearer_token):
         try:
             rule_url = f"https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/{workspace_name}/providers/Microsoft.SecurityInsights/alertRules/{rule.id}?api-version=2023-07-01-preview" 
             upload_request = requests.put(rule_url,headers=headers,data=corrected_rule)
-            print(upload_request.json())
             if upload_request.status_code == 200 or upload_request.status_code == 201:
                 print("Upload successfully rule ", rule.id)
             else:
