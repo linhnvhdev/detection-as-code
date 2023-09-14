@@ -1,7 +1,8 @@
-title: Bypassing security controls
-id: a250b79a-fd55-46e9-b7bf-4af6dbf28c6e
+title: Windows scheduled task create shell
+
+id: 91c47440-2a3a-4cb8-a1f2-37bd75d7f4fa
 status: test
-description: detect Adversaries bypass controls
+description: Adversaries frequently establish persistence by using scheduled tasks to launch the Windows Command Shell
 references:
     - https://redcanary.com/threat-detection-report/techniques/windows-command-shell/
 author: Linhnvhdev
@@ -12,10 +13,11 @@ logsource:
     product: windows
 detection:
     selection:
-        Image|endswith: 'cmd.exe'
+        Image|endswith: 'schtasks.exe'
         CommandLine|contains:
-            - 'bypass'
-            - '-exec'
+            - 'create'
+            - 'cmd.exe /c'
+            - 'cmd /c'
     condition: selection
 falsepositives:
     - medium

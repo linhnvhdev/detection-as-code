@@ -1,5 +1,6 @@
 title: Service Control Manager spawning Command Shell with suspect strings
-id: a250b79a-fd55-46e9-b7bf-4af6dbf28c6e
+
+id: 127bd585-ec81-4de1-b8f7-4b022a73acd5
 status: test
 description: Service Control Manager spawning Command Shell with suspect strings
 references:
@@ -13,10 +14,10 @@ logsource:
 detection:
     selection:
         Image|endswith: 'cmd.exe'
-        ParentImage|endswith: 'services.exe'
-        CommandLine|contains:
-            - '/c'
-            - 'echo'
+        ParentImage|endswith: 'explorer.exe'
+        CommandLine|contains|all:
+            - 'start'
+            - 'exit'
     condition: selection
 falsepositives:
     - medium

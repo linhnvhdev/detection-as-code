@@ -1,4 +1,5 @@
 title: PowerShell Encodedcommand  Switch
+
 id: dec520d9-638f-4646-89dc-f60f0900390b
 status: experimental
 description: This detection analytic looks for the execution of powershell.exe with command lines that include variations of the -encodedcommand argument
@@ -21,4 +22,4 @@ detection:
     condition: selection and not filter
 falsepositives:
      - Unknown
-level: critical
+level: low
