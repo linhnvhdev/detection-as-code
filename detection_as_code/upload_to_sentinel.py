@@ -26,7 +26,7 @@ def format_rule(rule):
             'properties' : {
                 'displayName': rule.title,
                 'enabled': True,
-                'query': test_query,
+                'query': rule.rule[0],
                 'severity': "High",
                 'suppressionDuration' : "PT1H",
                 'suppressionEnabled': False,
@@ -39,7 +39,7 @@ def format_rule(rule):
             'properties' : {
                 'displayName': rule.title,
                 'enabled': True,
-                'query': test_query,
+                'query': rule.rule[0],
                 'severity': rule.severity,
                 "queryFrequency": "PT1H",
                 "queryPeriod": "P2DT1H30M",

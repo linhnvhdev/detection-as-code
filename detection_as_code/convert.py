@@ -44,6 +44,10 @@ def convert_to_query(sigma_folder):
 
     splunk_backend = SplunkBackend(splunk_pipeline)
     azure_backend = AzureBackend(real_azure_pipeline)
+    print(azure_backend.eq_token)
+    azure_backend.eq_token = "=="
+    
+    print(vars(azure_backend))
 
     splunk_rules = []
     azure_rules = []
@@ -66,12 +70,12 @@ def convert_to_query(sigma_folder):
                                    severity=rule.level.name)
         splunk_rules.append(splunk_rule)
         azure_rules.append(azure_rule)
-        print(vars(splunk_rule))
-        print(vars(azure_rule))
-        # with open("rules_convert/azure/"+rule.title.replace(" ","_")+".txt","w") as f:
-        #     f.write(azure_rule.rule[0])
-        # with open("rules_convert/splunk/"+rule.title.replace(" ","_")+".txt","w") as f:
-        #     f.write(splunk_rule.rule[0])
+        # print(vars(splunk_rule))
+        # print(vars(azure_rule))
+        with open("rules_convert/azure/"+rule.title.replace(" ","_")+".txt","w") as f:
+            f.write(azure_rule.rule[0])
+        with open("rules_convert/splunk/"+rule.title.replace(" ","_")+".txt","w") as f:
+            f.write(splunk_rule.rule[0])
     return splunk_rules, azure_rules
 
 if __name__ == "__main__":
