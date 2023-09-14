@@ -1,4 +1,4 @@
-title: Windows scheduled task create shell
+title: Windows Scheduled Task Create Shell
 
 id: 91c47440-2a3a-4cb8-a1f2-37bd75d7f4fa
 status: test
@@ -21,5 +21,5 @@ detection:
             - 'cmd /c'
     condition: selection
 falsepositives:
-    - medium
+    - Unknown
 level: medium
