@@ -53,13 +53,17 @@ def convert_to_query(sigma_folder):
         sigma_collection_azure = copy.deepcopy(sigma_collection_splunk)
         
         splunk_rule = ConvertedRule(title = rule.title,
+                                    id = rule.id,
                                     type="splunk",
                                     status=rule.status.name,
-                                    rule=splunk_backend.convert(sigma_collection_splunk))
+                                    rule=splunk_backend.convert(sigma_collection_splunk),
+                                    severity=rule.level.name)
         azure_rule = ConvertedRule(title = rule.title,
+                                   id=rule.id,
                                    type="azure",
                                    status=rule.status.name,
-                                   rule=azure_backend.convert(sigma_collection_azure))
+                                   rule=azure_backend.convert(sigma_collection_azure),
+                                   severity=rule.level.name)
         splunk_rules.append(splunk_rule)
         azure_rules.append(azure_rule)
         print(vars(splunk_rule))
