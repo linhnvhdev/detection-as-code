@@ -4,10 +4,6 @@ import json
 import os 
 from dotenv import load_dotenv
 
-subscription_id='73311b42-844b-41a5-81b4-f864cbdac511'
-resource_group_name='sentinel-lab'
-workspace_name='sentinel-workspace'
-
 def upload(rules):
     print("Upload to Sentinel")
     bearer_token = login_to_azure()
@@ -66,7 +62,7 @@ def upload_rules(rules, bearer_token):
     for rule in rules:
         corrected_rule = format_rule(rule)
         try:
-            rule_url = f"https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/providers/Microsoft.OperationalInsights/workspaces/{workspace_name}/providers/Microsoft.SecurityInsights/alertRules/{rule.id}?api-version=2023-07-01-preview" 
+            rule_url = f"https://management.azure.com/subscriptions/{os.getenv('subscription_id')}/resourceGroups/{os.getenv('resource_group_name')}/providers/Microsoft.OperationalInsights/workspaces/{os.getenv('workspace_name')}/providers/Microsoft.SecurityInsights/alertRules/{rule.id}?api-version=2023-07-01-preview" 
             upload_request = requests.put(rule_url,headers=headers,data=corrected_rule)
             if upload_request.status_code == 200 or upload_request.status_code == 201:
                 print("Upload successfully rule ", rule.id)
