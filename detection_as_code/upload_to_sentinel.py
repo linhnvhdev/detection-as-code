@@ -11,14 +11,18 @@ def upload(rules):
 
 def login_to_azure():
     load_dotenv()
-    login_command = f"az login --service-principal -u {os.getenv('APP_ID')} -p {os.getenv('SP_PASSWORD')} --tenant {os.getenv('TENANT')}"
-    login_process = subprocess.call(login_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-    #login_process = subprocess.call(login_command, shell=True)
-    print("Login to azure successfully")
-    get_token_process = subprocess.check_output("az account get-access-token --output json", shell=True)
-    token_data = json.loads(get_token_process)
-    bearer_token = token_data['accessToken']
-    return bearer_token
+    try:
+        login_command = f"az login --service-principal -u {os.getenv('APP_ID')} -p {os.getenv('SP_PASSWORD')} --tenant {os.getenv('TENANT')}"
+        login_process = subprocess.call(login_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        #login_process = subprocess.call(login_command, shell=True)
+        get_token_process = subprocess.check_output("az account get-access-token --output json", shell=True, stderr=subprocess.DEVNULL)
+        token_data = json.loads(get_token_process)
+        bearer_token = token_data['accessToken']
+        print("Login to azure successfully")
+        return bearer_token
+    except:
+        print("Login to azure unsuccessfully. Please check your credentials or internet connection")
+        return None
 
 def format_rule(rule):
     if rule.severity == "CRITICAL" or rule.severity == "HIGH":
@@ -53,6 +57,7 @@ def format_rule(rule):
         return json.dumps(corrected_rule)
 
 def upload_rules(rules, bearer_token):
+    if bearer_token == None: return
     headers = {
         'Authorization': f'Bearer {bearer_token}',
         'Content-Type': 'application/json; charset=utf-8',
