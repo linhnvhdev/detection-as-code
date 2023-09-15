@@ -15,7 +15,6 @@ base_api_url = os.getenv('SPLUNK_URL_BASE')
 
 def upload(rules):
     print("Upload to Splunk:\n")
-    print(api_authorize())
     access_token = auth_method + " " + api_authorize()
     api_upload_rules(rules, access_token)
     # api_search_job(rules, access_token)
@@ -31,6 +30,23 @@ def api_authorize():
         return response.json()['sessionKey']
     except:
         print("Error: cannot connect to Splunk")
+
+
+def api_get_searches(rule_title):
+    try:
+        session = requests.Session()
+        session.auth = (username, password)
+        session.verify = False
+        searches_url = base_api_url + \
+            f"/services/saved/searches/{rule_title}?output_mode=json"
+        response = session.get(searches_url)
+        if response.status_code == 404:
+            return None
+        else:
+            data = response.json()['entry'][0]["name"]
+            return data
+    except Exception as err:
+        print(err)
         return None
 
 
@@ -39,6 +55,8 @@ def api_upload_rules(rules, access_token):
         auth_header = {'Authorization': access_token}
         upload_url = base_api_url + "/services/saved/searches?output_mode=json"
         for rule in rules:
+            if api_get_searches(rule.title) is not None:
+                continue
             schema = {
                 "name": rule.title,
                 "search": rule.rule[0],
