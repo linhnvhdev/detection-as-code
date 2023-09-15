@@ -56,6 +56,13 @@ def api_upload_rules(rules, access_token):
         upload_url = base_api_url + "/services/saved/searches?output_mode=json"
         for rule in rules:
             if api_get_searches(rule.title) is not None:
+                res = api_update_alert(rule.title, rule.rule[0])
+                if res.status_code == 404:
+                    print("Rule", rule.title, "not found")
+                elif  res.status_code == 200:
+                    print("Update rule", rule.title, "successfully")
+                else :
+                    print("Update rule", rule.title, "failed")
                 continue
             schema = {
                 "name": rule.title,
@@ -109,8 +116,19 @@ def api_search_job(rules, access_token):
         print(err)
 
 
-def api_update_search():
-    pass
+def api_update_alert(rule_title, search):
+    try:
+        session = requests.Session()
+        session.auth = (username, password)
+        session.verify = False
+        searches_url = base_api_url + \
+            f"/services/saved/searches/{rule_title}?output_mode=json"
+        response = session.post(searches_url, data={"search": search})
+
+        return response
+    except Exception as err:
+        print(err)
+        return None
 
 
 def api_delete_search():
