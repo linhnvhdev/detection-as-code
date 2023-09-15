@@ -42,9 +42,9 @@ stages:
         versionSpec: '3.11'
         addToPath: true
     - script: |
-        pip install PyYAML colorama
-        python tests/test_logsource.py
-      displayName: 'Test Sigma logsource'
+        pip install --user yamllint
+        yamllint rules/
+      displayName: 'Yaml Lint'
 
   - job: test_sigma_logsource
     displayName: 'Test Sigma logsource'
