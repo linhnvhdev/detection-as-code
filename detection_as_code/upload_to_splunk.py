@@ -41,7 +41,7 @@ def api_upload_rules(rules, access_token):
         for rule in rules:
             schema = {
                 "name": rule.title,
-                "search": "index=main eventtype=ms-sysmon-process",
+                "search": rule.rule[0],
                 "is_scheduled": True,
                 "cron_schedule": "*/5 * * * *",
                 "alert_type": "number of events",

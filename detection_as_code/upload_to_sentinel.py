@@ -11,7 +11,7 @@ def upload(rules):
 
 def login_to_azure():
     load_dotenv()
-    login_command = f"az login --service-principal -u {os.getenv('appId')} -p {os.getenv('password')} --tenant {os.getenv('tenant')}"
+    login_command = f"az login --service-principal -u {os.getenv('APP_ID')} -p {os.getenv('SP_PASSWORD')} --tenant {os.getenv('TENANT')}"
     login_process = subprocess.call(login_command, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
     #login_process = subprocess.call(login_command, shell=True)
     print("Login to azure successfully")
@@ -62,7 +62,7 @@ def upload_rules(rules, bearer_token):
     for rule in rules:
         corrected_rule = format_rule(rule)
         try:
-            rule_url = f"https://management.azure.com/subscriptions/{os.getenv('subscription_id')}/resourceGroups/{os.getenv('resource_group_name')}/providers/Microsoft.OperationalInsights/workspaces/{os.getenv('workspace_name')}/providers/Microsoft.SecurityInsights/alertRules/{rule.id}?api-version=2023-07-01-preview" 
+            rule_url = f"https://management.azure.com/subscriptions/{os.getenv('SUBSCRIPTION_ID')}/resourceGroups/{os.getenv('RESOURCE_GROUP_NAME')}/providers/Microsoft.OperationalInsights/workspaces/{os.getenv('WORKSPACE_NAME')}/providers/Microsoft.SecurityInsights/alertRules/{rule.id}?api-version=2023-07-01-preview" 
             upload_request = requests.put(rule_url,headers=headers,data=corrected_rule)
             if upload_request.status_code == 200 or upload_request.status_code == 201:
                 print("Upload successfully rule ", rule.id)
